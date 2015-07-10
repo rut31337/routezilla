@@ -1,0 +1,48 @@
+sudo bash
+
+dnf -y install git docker bridge-utils telnet
+docker pull abaranov/quagga
+bash -c "curl https://raw.githubusercontent.com/jpetazzo/pipework/master/pipework" > ~/pipework
+chmod +x ~/pipework
+
+rm -rf ~/volumes
+
+for hn in {001..100}
+do
+  mkdir -p ~/volumes/quagga/R$hn
+  echo -e "hostname R$hn\npassword zebra" |tee ~/volumes/quagga/R$hn/{bgpd,zebra}.conf
+done
+
+chcon -Rvt svirt_sandbox_file_t ~/volumes/quagga
+setfacl -R -m u:100:rwx ~/volumes/quagga
+setfacl -R -m g:101:rwx ~/volumes/quagga
+
+f=1
+s=1
+for hn in {001..100}
+do
+  docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga abaranov/quagga
+  ~/pipework br0 R$hn 172.16.$f.$s/12
+  echo "Created 172.16.$f.$s/12"
+  ((s=s+1))
+  if [ $s -ge 255 ]
+  then
+    ((f=f+1))
+    if [ $f -ge 255 ]
+    then
+      echo "Error, out of IPs!"
+      exit 1
+    fi
+    s=1
+  fi
+done
+
+ifconfig br0 172.16.0.1/12
+
+
+for hn in {001..100}
+do
+  docker kill R$hn
+  docker rm R$hn
+done
+rm -rf ~/volumes
