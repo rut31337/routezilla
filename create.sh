@@ -2,8 +2,6 @@
 
 # Create 1000 quagga routers
 
-sudo bash
-
 echo "Creating quagga configuration files..."
 
 for hn in {0001..1000}
