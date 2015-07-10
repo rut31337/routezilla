@@ -39,6 +39,8 @@ done
 
 ifconfig br0 172.16.0.1/12
 
+exit
+# run this manually to clear the containers
 
 for hn in {001..100}
 do
