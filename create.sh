@@ -9,7 +9,7 @@ echo "Creating quagga configuration files..."
 for hn in {0001..1000}
 do
   mkdir -p ~/volumes/quagga/R$hn
-  echo -e "hostname R$hn\npassword zebra" |tee ~/volumes/quagga/R$hn/{bgpd,zebra}.conf > /dev/null
+  echo -e "hostname R$hn\npassword zebra" |tee ~/volumes/quagga/R$hn/{ospfd,bgpd,zebra}.conf > /dev/null
 done
 
 echo "Setting up configuration file security..."
@@ -23,7 +23,7 @@ s=1
 for hn in {0001..1000}
 do
   #docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga abaranov/quagga 1> /dev/null
-  docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga rut31337/quagga 1> /dev/null
+  docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga rut31337/docker-quagga 1> /dev/null
   ~/pipework br0 R$hn 172.16.$f.$s/12
   echo "Created router R$hn with IP address 172.16.$f.$s"
   ((s=s+1))
