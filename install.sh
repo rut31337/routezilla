@@ -2,7 +2,7 @@
 
 # install docker, useful utilities, and quagga image
 
-dnf -y install git docker bridge-utils telnet
+dnf -y install git docker bridge-utils telnet net-tools
 systemctl enable docker
 systemctl start docker
 docker pull abaranov/quagga
