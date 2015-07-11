@@ -22,7 +22,8 @@ f=1
 s=1
 for hn in {0001..1000}
 do
-  docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga abaranov/quagga 1> /dev/null
+  #docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga abaranov/quagga 1> /dev/null
+  docker run -P --hostname=R$hn --name=R$hn -d -v ~/volumes/quagga/R$hn:/etc/quagga rut31337/quagga 1> /dev/null
   ~/pipework br0 R$hn 172.16.$f.$s/12
   echo "Created router R$hn with IP address 172.16.$f.$s"
   ((s=s+1))
