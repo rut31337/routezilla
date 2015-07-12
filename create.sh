@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Create x quagga routers
-low=0001
-hi=1000
+
+source rz.conf
 
 iptables -F OSPF
 iptables -N OSPF

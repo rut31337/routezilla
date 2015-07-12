@@ -2,7 +2,9 @@
 
 # kill and remove all containers
 
-for hn in {0001..1000}
+source rz.conf
+
+for hn in $(eval echo {$low..$hi})
 do
   docker rm -f R$hn
 done
